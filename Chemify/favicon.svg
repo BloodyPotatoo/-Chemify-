@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <!-- Flask outline -->
+  <path d="M12 4 L12 12 L6 24 L26 24 L20 12 L20 4 Z" fill="none" stroke="#ffffff" stroke-width="2"/>
+  <!-- Flask neck -->
+  <rect x="12" y="2" width="8" height="4" fill="none" stroke="#ffffff" stroke-width="2"/>
+  <!-- Blue liquid -->
+  <path d="M12.5 12 L7 22 L25 22 L19.5 12 Z" fill="#0080ff"/>
+</svg>

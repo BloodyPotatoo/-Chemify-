@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chemify</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="logo" onclick="window.location.href='index.html'">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="40" height="40">
+            <path d="M12 4 L12 12 L6 24 L26 24 L20 12 L20 4 Z" fill="none" stroke="#ffffff" stroke-width="2"/>
+            <rect x="12" y="2" width="8" height="4" fill="none" stroke="#ffffff" stroke-width="2"/>
+            <path d="M12.5 12 L7 22 L25 22 L19.5 12 Z" fill="#0080ff"/>
+        </svg>
+    </div>
+    <div class="molecule" style="top: 10%; left: 15%; animation-delay: 0s;">H₂O</div>
+    <div class="molecule" style="top: 20%; left: 80%; animation-delay: 2s;">CO₂</div>
+    <div class="molecule" style="top: 60%; left: 10%; animation-delay: 4s;">NaCl</div>
+    <div class="molecule" style="top: 70%; left: 85%; animation-delay: 1s;">C₆H₁₂O₆</div>
+    <div class="molecule" style="top: 30%; left: 60%; animation-delay: 3s;">NH₃</div>
+    <div class="molecule" style="top: 80%; left: 40%; animation-delay: 5s;">CH₄</div>
+    <div class="molecule" style="top: 45%; left: 25%; animation-delay: 6s;">O₂</div>
+    <div class="molecule" style="top: 15%; left: 50%; animation-delay: 7s;">CaCO₃</div>
+    
+    <div class="container">
+        <h1 class="title">Chemify</h1>
+        <div class="boxes">
+            <div class="box" onclick="window.open('periodic-table.html', '_blank')">
+                <div class="box-content">
+                    <div class="box-logo">⚛</div>
+                    <div class="box-text">Periodic Table</div>
+                </div>
+            </div>
+            <div class="box" onclick="window.open('converter.html', '_blank')">
+                <div class="box-content">
+                    <div class="box-logo">⇄</div>
+                    <div class="box-text">Converter</div>
+                </div>
+            </div>
+            <div class="box" onclick="window.open('quiz.html', '_blank')">
+                <div class="box-content">
+                    <div class="box-logo">?</div>
+                    <div class="box-text">Quiz</div>
+                </div>
+            </div>
+            <div class="box" onclick="window.open('https://app.molview.com/', '_blank')">
+                <div class="box-content">
+                    <div class="box-logo">◊</div>
+                    <div class="box-text">3D Viewer</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="periodicModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closePeriodicTable()">&times;</span>
+            <h2>Periodic Table</h2>
+            <div class="periodic-table">
+                <div class="element" data-element="H">H<span>1</span></div>
+                <div class="element" data-element="He">He<span>2</span></div>
+                <div class="element" data-element="Li">Li<span>3</span></div>
+                <div class="element" data-element="Be">Be<span>4</span></div>
+                <div class="element" data-element="B">B<span>5</span></div>
+                <div class="element" data-element="C">C<span>6</span></div>
+                <div class="element" data-element="N">N<span>7</span></div>
+                <div class="element" data-element="O">O<span>8</span></div>
+                <div class="element" data-element="F">F<span>9</span></div>
+                <div class="element" data-element="Ne">Ne<span>10</span></div>
+                <div class="element" data-element="Na">Na<span>11</span></div>
+                <div class="element" data-element="Mg">Mg<span>12</span></div>
+                <div class="element" data-element="Al">Al<span>13</span></div>
+                <div class="element" data-element="Si">Si<span>14</span></div>
+                <div class="element" data-element="P">P<span>15</span></div>
+                <div class="element" data-element="S">S<span>16</span></div>
+                <div class="element" data-element="Cl">Cl<span>17</span></div>
+                <div class="element" data-element="Ar">Ar<span>18</span></div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="comingSoonModal" class="modal" onclick="hideComingSoon()">
+        <div class="modal-content" style="text-align: center; padding: 50px; box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);">
+            <h2 style="font-size: 3rem; margin-bottom: 20px;">Coming Soon</h2>
+            <p style="font-size: 1.2rem;">Quiz feature is under development</p>
+        </div>
+    </div>
+    
+    <script>
+        function openPeriodicTable() {
+            document.getElementById('periodicModal').style.display = 'block';
+        }
+        
+        function closePeriodicTable() {
+            document.getElementById('periodicModal').style.display = 'none';
+        }
+        
+        function showComingSoon() {
+            document.getElementById('comingSoonModal').style.display = 'block';
+        }
+        
+        function hideComingSoon() {
+            document.getElementById('comingSoonModal').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

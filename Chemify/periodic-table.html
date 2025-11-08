@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Periodic Table - Chemify</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: black;
+            color: white;
+            font-family: Arial, sans-serif;
+            padding: 10px;
+            overflow-x: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: white;
+            text-shadow: 0 0 8px white;
+        }
+        
+        .periodic-table {
+            display: grid;
+            grid-template-columns: repeat(18, 50px);
+            gap: 2px;
+            margin: 20px auto;
+            justify-content: center;
+        }
+        
+        .element {
+            border: 1px solid #666;
+            border-radius: 3px;
+            padding: 4px;
+            text-align: center;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .s-block { background: linear-gradient(135deg, #ff6b6b, #ff8e8e); }
+        .p-block { background: linear-gradient(135deg, #4ecdc4, #6dd5db); }
+        .d-block { background: linear-gradient(135deg, #45b7d1, #74c7e3); }
+        .f-block { background: linear-gradient(135deg, #feca57, #fed976); }
+        
+        .element:hover {
+            background: linear-gradient(135deg, #555, #777);
+            transform: scale(1.05);
+        }
+        
+        .element.expanded {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(3);
+            z-index: 1000;
+            background: linear-gradient(135deg, #444, #666);
+            border: 2px solid #888;
+            border-radius: 10px;
+            padding: 20px;
+            min-height: 200px;
+            width: 200px;
+            box-shadow: 0 0 50px rgba(0,0,0,0.8);
+        }
+        
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 999;
+            display: none;
+        }
+        
+        .element .symbol {
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+        
+        .element.expanded .symbol {
+            font-size: 2rem;
+        }
+        
+        .element .number {
+            font-size: 0.5rem;
+            position: absolute;
+            top: 1px;
+            left: 2px;
+            opacity: 0.8;
+        }
+        
+        .element.expanded .number {
+            font-size: 1rem;
+            top: 5px;
+            left: 5px;
+        }
+        
+        .element .name {
+            font-size: 0.4rem;
+            opacity: 0.8;
+        }
+        
+        .element.expanded .name {
+            font-size: 0.8rem;
+        }
+        
+        .element-details {
+            display: none;
+            margin-top: 10px;
+            font-size: 0.6rem;
+            text-align: left;
+        }
+        
+        .element.expanded .element-details {
+            display: block;
+        }
+        
+        .empty {
+            grid-column: span 1;
+        }
+        
+        .logo {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            cursor: pointer;
+            transition: transform 0.3s;
+            z-index: 1000;
+        }
+        
+        .logo:hover {
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="logo" onclick="window.location.href='index.html'">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="40" height="40">
+            <path d="M12 4 L12 12 L6 24 L26 24 L20 12 L20 4 Z" fill="none" stroke="#ffffff" stroke-width="2"/>
+            <rect x="12" y="2" width="8" height="4" fill="none" stroke="#ffffff" stroke-width="2"/>
+            <path d="M12.5 12 L7 22 L25 22 L19.5 12 Z" fill="#0080ff"/>
+        </svg>
+    </div>
+    <div class="overlay" onclick="closeExpanded()"></div>
+    <h1>Periodic Table</h1>
+    <div class="periodic-table">
+        <div class="element s-block" onclick="expandElement(this, 'Hydrogen', '1.008', 'Gas', '1s¹', '-259°C', '-253°C')"><div class="number">1</div><div class="symbol">H</div><div class="name">Hydrogen</div><div class="element-details"><div>Mass: 1.008</div><div>State: Gas</div><div>Config: 1s¹</div><div>Melting: -259°C</div><div>Boiling: -253°C</div></div></div>
+        <div class="empty" style="grid-column: span 16;"></div>
+        <div class="element s-block" onclick="expandElement(this, 'Helium', '4.003', 'Gas', '1s²', '-272°C', '-269°C')"><div class="number">2</div><div class="symbol">He</div><div class="name">Helium</div><div class="element-details"><div>Mass: 4.003</div><div>State: Gas</div><div>Config: 1s²</div><div>Melting: -272°C</div><div>Boiling: -269°C</div></div></div>
+        
+        <div class="element s-block" onclick="expandElement(this, 'Lithium', '6.941', 'Solid', '[He] 2s¹', '180°C', '1342°C')"><div class="number">3</div><div class="symbol">Li</div><div class="name">Lithium</div><div class="element-details"><div>Mass: 6.941</div><div>State: Solid</div><div>Config: [He] 2s¹</div><div>Melting: 180°C</div><div>Boiling: 1342°C</div></div></div>
+        <div class="element s-block" onclick="expandElement(this, 'Beryllium', '9.012', 'Solid', '[He] 2s²', '1287°C', '2470°C')"><div class="number">4</div><div class="symbol">Be</div><div class="name">Beryllium</div><div class="element-details"><div>Mass: 9.012</div><div>State: Solid</div><div>Config: [He] 2s²</div><div>Melting: 1287°C</div><div>Boiling: 2470°C</div></div></div>
+        <div class="empty" style="grid-column: span 10;"></div>
+        <div class="element p-block" onclick="expandElement(this, 'Boron', '10.811', 'Solid', '[He] 2s² 2p¹', '2075°C', '4000°C')"><div class="number">5</div><div class="symbol">B</div><div class="name">Boron</div><div class="element-details"><div>Mass: 10.811</div><div>State: Solid</div><div>Config: [He] 2s² 2p¹</div><div>Melting: 2075°C</div><div>Boiling: 4000°C</div></div></div>
+        <div class="element p-block" onclick="expandElement(this, 'Carbon', '12.011', 'Solid', '[He] 2s² 2p²', '3550°C', '4827°C')"><div class="number">6</div><div class="symbol">C</div><div class="name">Carbon</div><div class="element-details"><div>Mass: 12.011</div><div>State: Solid</div><div>Config: [He] 2s² 2p²</div><div>Melting: 3550°C</div><div>Boiling: 4827°C</div></div></div>
+        <div class="element p-block" onclick="expandElement(this, 'Nitrogen', '14.007', 'Gas', '[He] 2s² 2p³', '-210°C', '-196°C')"><div class="number">7</div><div class="symbol">N</div><div class="name">Nitrogen</div><div class="element-details"><div>Mass: 14.007</div><div>State: Gas</div><div>Config: [He] 2s² 2p³</div><div>Melting: -210°C</div><div>Boiling: -196°C</div></div></div>
+        <div class="element p-block" onclick="expandElement(this, 'Oxygen', '15.999', 'Gas', '[He] 2s² 2p⁴', '-218°C', '-183°C')"><div class="number">8</div><div class="symbol">O</div><div class="name">Oxygen</div><div class="element-details"><div>Mass: 15.999</div><div>State: Gas</div><div>Config: [He] 2s² 2p⁴</div><div>Melting: -218°C</div><div>Boiling: -183°C</div></div></div>
+        <div class="element p-block" onclick="expandElement(this, 'Fluorine', '18.998', 'Gas', '[He] 2s² 2p⁵', '-220°C', '-188°C')"><div class="number">9</div><div class="symbol">F</div><div class="name">Fluorine</div><div class="element-details"><div>Mass: 18.998</div><div>State: Gas</div><div>Config: [He] 2s² 2p⁵</div><div>Melting: -220°C</div><div>Boiling: -188°C</div></div></div>
+        <div class="element p-block" onclick="expandElement(this, 'Neon', '20.180', 'Gas', '[He] 2s² 2p⁶', '-249°C', '-246°C')"><div class="number">10</div><div class="symbol">Ne</div><div class="name">Neon</div><div class="element-details"><div>Mass: 20.180</div><div>State: Gas</div><div>Config: [He] 2s² 2p⁶</div><div>Melting: -249°C</div><div>Boiling: -246°C</div></div></div>
+        
+        <div class="element"><div class="number">11</div><div class="symbol">Na</div><div class="name">Sodium</div></div>
+        <div class="element"><div class="number">12</div><div class="symbol">Mg</div><div class="name">Magnesium</div></div>
+        <div class="empty" style="grid-column: span 10;"></div>
+        <div class="element"><div class="number">13</div><div class="symbol">Al</div><div class="name">Aluminum</div></div>
+        <div class="element"><div class="number">14</div><div class="symbol">Si</div><div class="name">Silicon</div></div>
+        <div class="element"><div class="number">15</div><div class="symbol">P</div><div class="name">Phosphorus</div></div>
+        <div class="element"><div class="number">16</div><div class="symbol">S</div><div class="name">Sulfur</div></div>
+        <div class="element"><div class="number">17</div><div class="symbol">Cl</div><div class="name">Chlorine</div></div>
+        <div class="element"><div class="number">18</div><div class="symbol">Ar</div><div class="name">Argon</div></div>
+        
+        <div class="element"><div class="number">19</div><div class="symbol">K</div><div class="name">Potassium</div></div>
+        <div class="element"><div class="number">20</div><div class="symbol">Ca</div><div class="name">Calcium</div></div>
+        <div class="element"><div class="number">21</div><div class="symbol">Sc</div><div class="name">Scandium</div></div>
+        <div class="element"><div class="number">22</div><div class="symbol">Ti</div><div class="name">Titanium</div></div>
+        <div class="element"><div class="number">23</div><div class="symbol">V</div><div class="name">Vanadium</div></div>
+        <div class="element"><div class="number">24</div><div class="symbol">Cr</div><div class="name">Chromium</div></div>
+        <div class="element"><div class="number">25</div><div class="symbol">Mn</div><div class="name">Manganese</div></div>
+        <div class="element"><div class="number">26</div><div class="symbol">Fe</div><div class="name">Iron</div></div>
+        <div class="element"><div class="number">27</div><div class="symbol">Co</div><div class="name">Cobalt</div></div>
+        <div class="element"><div class="number">28</div><div class="symbol">Ni</div><div class="name">Nickel</div></div>
+        <div class="element"><div class="number">29</div><div class="symbol">Cu</div><div class="name">Copper</div></div>
+        <div class="element"><div class="number">30</div><div class="symbol">Zn</div><div class="name">Zinc</div></div>
+        <div class="element"><div class="number">31</div><div class="symbol">Ga</div><div class="name">Gallium</div></div>
+        <div class="element"><div class="number">32</div><div class="symbol">Ge</div><div class="name">Germanium</div></div>
+        <div class="element"><div class="number">33</div><div class="symbol">As</div><div class="name">Arsenic</div></div>
+        <div class="element"><div class="number">34</div><div class="symbol">Se</div><div class="name">Selenium</div></div>
+        <div class="element"><div class="number">35</div><div class="symbol">Br</div><div class="name">Bromine</div></div>
+        <div class="element"><div class="number">36</div><div class="symbol">Kr</div><div class="name">Krypton</div></div>
+        
+        <div class="element"><div class="number">37</div><div class="symbol">Rb</div><div class="name">Rubidium</div></div>
+        <div class="element"><div class="number">38</div><div class="symbol">Sr</div><div class="name">Strontium</div></div>
+        <div class="element"><div class="number">39</div><div class="symbol">Y</div><div class="name">Yttrium</div></div>
+        <div class="element"><div class="number">40</div><div class="symbol">Zr</div><div class="name">Zirconium</div></div>
+        <div class="element"><div class="number">41</div><div class="symbol">Nb</div><div class="name">Niobium</div></div>
+        <div class="element"><div class="number">42</div><div class="symbol">Mo</div><div class="name">Molybdenum</div></div>
+        <div class="element"><div class="number">43</div><div class="symbol">Tc</div><div class="name">Technetium</div></div>
+        <div class="element"><div class="number">44</div><div class="symbol">Ru</div><div class="name">Ruthenium</div></div>
+        <div class="element"><div class="number">45</div><div class="symbol">Rh</div><div class="name">Rhodium</div></div>
+        <div class="element"><div class="number">46</div><div class="symbol">Pd</div><div class="name">Palladium</div></div>
+        <div class="element"><div class="number">47</div><div class="symbol">Ag</div><div class="name">Silver</div></div>
+        <div class="element"><div class="number">48</div><div class="symbol">Cd</div><div class="name">Cadmium</div></div>
+        <div class="element"><div class="number">49</div><div class="symbol">In</div><div class="name">Indium</div></div>
+        <div class="element"><div class="number">50</div><div class="symbol">Sn</div><div class="name">Tin</div></div>
+        <div class="element"><div class="number">51</div><div class="symbol">Sb</div><div class="name">Antimony</div></div>
+        <div class="element"><div class="number">52</div><div class="symbol">Te</div><div class="name">Tellurium</div></div>
+        <div class="element"><div class="number">53</div><div class="symbol">I</div><div class="name">Iodine</div></div>
+        <div class="element"><div class="number">54</div><div class="symbol">Xe</div><div class="name">Xenon</div></div>
+        
+        <div class="element"><div class="number">55</div><div class="symbol">Cs</div><div class="name">Cesium</div></div>
+        <div class="element"><div class="number">56</div><div class="symbol">Ba</div><div class="name">Barium</div></div>
+        <div class="element"><div class="number">57</div><div class="symbol">La</div><div class="name">Lanthanum</div></div>
+        <div class="element"><div class="number">72</div><div class="symbol">Hf</div><div class="name">Hafnium</div></div>
+        <div class="element"><div class="number">73</div><div class="symbol">Ta</div><div class="name">Tantalum</div></div>
+        <div class="element"><div class="number">74</div><div class="symbol">W</div><div class="name">Tungsten</div></div>
+        <div class="element"><div class="number">75</div><div class="symbol">Re</div><div class="name">Rhenium</div></div>
+        <div class="element"><div class="number">76</div><div class="symbol">Os</div><div class="name">Osmium</div></div>
+        <div class="element"><div class="number">77</div><div class="symbol">Ir</div><div class="name">Iridium</div></div>
+        <div class="element"><div class="number">78</div><div class="symbol">Pt</div><div class="name">Platinum</div></div>
+        <div class="element"><div class="number">79</div><div class="symbol">Au</div><div class="name">Gold</div></div>
+        <div class="element"><div class="number">80</div><div class="symbol">Hg</div><div class="name">Mercury</div></div>
+        <div class="element"><div class="number">81</div><div class="symbol">Tl</div><div class="name">Thallium</div></div>
+        <div class="element"><div class="number">82</div><div class="symbol">Pb</div><div class="name">Lead</div></div>
+        <div class="element"><div class="number">83</div><div class="symbol">Bi</div><div class="name">Bismuth</div></div>
+        <div class="element"><div class="number">84</div><div class="symbol">Po</div><div class="name">Polonium</div></div>
+        <div class="element"><div class="number">85</div><div class="symbol">At</div><div class="name">Astatine</div></div>
+        <div class="element"><div class="number">86</div><div class="symbol">Rn</div><div class="name">Radon</div></div>
+        
+        <div class="element"><div class="number">87</div><div class="symbol">Fr</div><div class="name">Francium</div></div>
+        <div class="element"><div class="number">88</div><div class="symbol">Ra</div><div class="name">Radium</div></div>
+        <div class="element"><div class="number">89</div><div class="symbol">Ac</div><div class="name">Actinium</div></div>
+        <div class="element"><div class="number">104</div><div class="symbol">Rf</div><div class="name">Rutherfordium</div></div>
+        <div class="element"><div class="number">105</div><div class="symbol">Db</div><div class="name">Dubnium</div></div>
+        <div class="element"><div class="number">106</div><div class="symbol">Sg</div><div class="name">Seaborgium</div></div>
+        <div class="element"><div class="number">107</div><div class="symbol">Bh</div><div class="name">Bohrium</div></div>
+        <div class="element"><div class="number">108</div><div class="symbol">Hs</div><div class="name">Hassium</div></div>
+        <div class="element"><div class="number">109</div><div class="symbol">Mt</div><div class="name">Meitnerium</div></div>
+        <div class="element"><div class="number">110</div><div class="symbol">Ds</div><div class="name">Darmstadtium</div></div>
+        <div class="element"><div class="number">111</div><div class="symbol">Rg</div><div class="name">Roentgenium</div></div>
+        <div class="element"><div class="number">112</div><div class="symbol">Cn</div><div class="name">Copernicium</div></div>
+        <div class="element"><div class="number">113</div><div class="symbol">Nh</div><div class="name">Nihonium</div></div>
+        <div class="element"><div class="number">114</div><div class="symbol">Fl</div><div class="name">Flerovium</div></div>
+        <div class="element"><div class="number">115</div><div class="symbol">Mc</div><div class="name">Moscovium</div></div>
+        <div class="element"><div class="number">116</div><div class="symbol">Lv</div><div class="name">Livermorium</div></div>
+        <div class="element"><div class="number">117</div><div class="symbol">Ts</div><div class="name">Tennessine</div></div>
+        <div class="element"><div class="number">118</div><div class="symbol">Og</div><div class="name">Oganesson</div></div>
+        
+        <div class="empty" style="grid-column: span 18; height: 20px;"></div>
+        
+        <div class="empty" style="grid-column: span 3;"></div>
+        <div class="element"><div class="number">58</div><div class="symbol">Ce</div><div class="name">Cerium</div></div>
+        <div class="element"><div class="number">59</div><div class="symbol">Pr</div><div class="name">Praseodymium</div></div>
+        <div class="element"><div class="number">60</div><div class="symbol">Nd</div><div class="name">Neodymium</div></div>
+        <div class="element"><div class="number">61</div><div class="symbol">Pm</div><div class="name">Promethium</div></div>
+        <div class="element"><div class="number">62</div><div class="symbol">Sm</div><div class="name">Samarium</div></div>
+        <div class="element"><div class="number">63</div><div class="symbol">Eu</div><div class="name">Europium</div></div>
+        <div class="element"><div class="number">64</div><div class="symbol">Gd</div><div class="name">Gadolinium</div></div>
+        <div class="element"><div class="number">65</div><div class="symbol">Tb</div><div class="name">Terbium</div></div>
+        <div class="element"><div class="number">66</div><div class="symbol">Dy</div><div class="name">Dysprosium</div></div>
+        <div class="element"><div class="number">67</div><div class="symbol">Ho</div><div class="name">Holmium</div></div>
+        <div class="element"><div class="number">68</div><div class="symbol">Er</div><div class="name">Erbium</div></div>
+        <div class="element"><div class="number">69</div><div class="symbol">Tm</div><div class="name">Thulium</div></div>
+        <div class="element"><div class="number">70</div><div class="symbol">Yb</div><div class="name">Ytterbium</div></div>
+        <div class="element"><div class="number">71</div><div class="symbol">Lu</div><div class="name">Lutetium</div></div>
+        
+        <div class="empty" style="grid-column: span 3;"></div>
+        <div class="element"><div class="number">90</div><div class="symbol">Th</div><div class="name">Thorium</div></div>
+        <div class="element"><div class="number">91</div><div class="symbol">Pa</div><div class="name">Protactinium</div></div>
+        <div class="element"><div class="number">92</div><div class="symbol">U</div><div class="name">Uranium</div></div>
+        <div class="element"><div class="number">93</div><div class="symbol">Np</div><div class="name">Neptunium</div></div>
+        <div class="element"><div class="number">94</div><div class="symbol">Pu</div><div class="name">Plutonium</div></div>
+        <div class="element"><div class="number">95</div><div class="symbol">Am</div><div class="name">Americium</div></div>
+        <div class="element"><div class="number">96</div><div class="symbol">Cm</div><div class="name">Curium</div></div>
+        <div class="element"><div class="number">97</div><div class="symbol">Bk</div><div class="name">Berkelium</div></div>
+        <div class="element"><div class="number">98</div><div class="symbol">Cf</div><div class="name">Californium</div></div>
+        <div class="element"><div class="number">99</div><div class="symbol">Es</div><div class="name">Einsteinium</div></div>
+        <div class="element"><div class="number">100</div><div class="symbol">Fm</div><div class="name">Fermium</div></div>
+        <div class="element"><div class="number">101</div><div class="symbol">Md</div><div class="name">Mendelevium</div></div>
+        <div class="element"><div class="number">102</div><div class="symbol">No</div><div class="name">Nobelium</div></div>
+        <div class="element"><div class="number">103</div><div class="symbol">Lr</div><div class="name">Lawrencium</div></div>
+    </div>
+    
+    <script>
+        function expandElement(element, name, mass, state, config, melting, boiling) {
+            // Close any previously expanded element
+            closeExpanded();
+            
+            // Show overlay
+            document.querySelector('.overlay').style.display = 'block';
+            
+            // Expand the clicked element
+            element.classList.add('expanded');
+        }
+        
+        function closeExpanded() {
+            // Hide overlay
+            document.querySelector('.overlay').style.display = 'none';
+            
+            // Remove expanded class from all elements
+            document.querySelectorAll('.element.expanded').forEach(el => {
+                el.classList.remove('expanded');
+            });
+        }
+        
+        // Close on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeExpanded();
+            }
+        });
+    </script>
+</body>
+</html>
